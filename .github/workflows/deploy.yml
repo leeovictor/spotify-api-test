@@ -17,6 +17,9 @@ concurrency:
 
 jobs:
   build:
+    environment:
+      name: 'github-pages'
+
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -30,14 +33,6 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-
-      - name: Debug - Check environment variables
-        run: |
-          echo "VITE_SPOTIFY_CLIENT_ID is set: $([ -z "$VITE_SPOTIFY_CLIENT_ID" ] && echo 'NO' || echo 'YES')"
-          echo "VITE_REDIRECT_TARGET is set: $([ -z "$VITE_REDIRECT_TARGET" ] && echo 'NO' || echo 'YES')"
-        env:
-          VITE_SPOTIFY_CLIENT_ID: ${{ secrets.VITE_SPOTIFY_CLIENT_ID }}
-          VITE_REDIRECT_TARGET: ${{ secrets.VITE_REDIRECT_TARGET }}
 
       - name: Build
         run: npm run build
