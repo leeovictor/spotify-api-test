@@ -1,23 +1,28 @@
-import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { createBrowserRouter } from 'react-router';
+import { createBrowserRouter, redirect } from 'react-router';
 import { RouterProvider } from 'react-router/dom';
 import './index.css';
 import App from './App.tsx';
+import './lib/spotifyApi.ts';
+import AuthPage from './auth/AuthPage.tsx';
+import { isAuthenticated } from './lib/spotifyApi.ts';
+
+async function authMiddleware() {
+  if (!isAuthenticated()) {
+    throw redirect('/auth');
+  }
+}
 
 const router = createBrowserRouter([
   {
-    path: '/',
     children: [
-      { index: true, Component: App },
-      { path: 'auth', element: <div>Auth Page goes here!</div> },
+      { index: true, Component: App, middleware: [authMiddleware] },
+      { path: 'auth', Component: AuthPage },
       { path: 'artist/:artistId', element: <div>Artist Page goes here!</div> },
     ],
   },
 ]);
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <RouterProvider router={router} />
-  </StrictMode>,
+  <RouterProvider router={router} />,
 );
