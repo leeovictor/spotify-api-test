@@ -9,12 +9,13 @@ import { isAuthenticated } from './lib/spotifyApi.ts';
 
 async function authMiddleware() {
   if (!isAuthenticated()) {
-    throw redirect('/auth');
+    throw redirect('/spotify-api-test/auth');
   }
 }
 
 const router = createBrowserRouter([
   {
+    path: 'spotify-api-test',
     children: [
       { index: true, Component: App, middleware: [authMiddleware] },
       { path: 'auth', Component: AuthPage },
