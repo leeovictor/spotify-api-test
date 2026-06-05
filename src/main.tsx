@@ -1,5 +1,5 @@
 import { createRoot } from 'react-dom/client';
-import { createBrowserRouter, redirect } from 'react-router';
+import { createHashRouter, redirect } from 'react-router';
 import { RouterProvider } from 'react-router/dom';
 import './index.css';
 import App from './App.tsx';
@@ -9,13 +9,12 @@ import { isAuthenticated } from './lib/spotifyApi.ts';
 
 async function authMiddleware() {
   if (!isAuthenticated()) {
-    throw redirect('/spotify-api-test/auth');
+    throw redirect('/auth');
   }
 }
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
-    path: 'spotify-api-test',
     children: [
       { index: true, Component: App, middleware: [authMiddleware] },
       { path: 'auth', Component: AuthPage },
